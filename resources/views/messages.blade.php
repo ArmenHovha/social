@@ -88,7 +88,7 @@
                   </li>
 		 </ul>
 		 </div><!--chat_area-->
-          <div class="message_write">
+          <div class="message_write" id ="formdata">
              <textarea class="form-control text" placeholder="type a message" ></textarea>
              <div class="clearfix"></div>
              <div class="chat_bottom">
@@ -102,11 +102,21 @@
                   <button class="btn btn-warning btn-sm sendChat pull-right" id="btn-chat"  data-user_name="{{Auth::user()->name}}" data-content="{{csrf_token()}}">
                       Send</button>
                   </span>
+              {{--// <form action="/pdf" type="post" class="formpdf">--}}
+
+                 <button class="btn btn-warning btn-sm pdf pull-center" id="btn-chat"  data-user_name="{{Auth::user()->name}}" data-content="{{csrf_token()}}">
+                   PDF</button>
+                 </span>
+             {{--//  </form>--}}
              </div>
 		 </div>
          </div> <!--message_section-->
       </div>
    </div>
+
+
+
+
 </div>
 
 

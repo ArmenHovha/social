@@ -8,6 +8,7 @@ use Validator;
 use App\User;
 use App\Req;
 use App\Message;
+
 //use Carbon\Carbon;
 //use Cache;
 
@@ -28,7 +29,7 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
 
     {
 
@@ -45,8 +46,13 @@ class HomeController extends Controller
                     ->where('request.to_id', '=', Auth::id())
                     ->orOn('users.id', '=', 'request.to_id')
                     ->where('request.in_id', '=', Auth::id());
-            })->get();
+            })->WHERE('users.id', '!=', Auth::id())->paginate(2);
 
+        if ($request->ajax()) {
+        return view('home')->with(['users' => $users,
+            'id' => $id,'user_name' => $user_name,'param' => $param])->render();
+
+    }
 
         return view('/home', compact('param', 'users', 'id', 'user_name'));
 
@@ -127,7 +133,7 @@ class HomeController extends Controller
         // $from_id = $request->from_id;
         $from_id = Auth::id();
         $to_id = $request->to_id;
-dd($to_id);
+
         $showmessage = Message::where([
             'from_id' => $from_id,
             'to_id' => $to_id,
@@ -193,5 +199,54 @@ dd($to_id);
 //        echo json_encode($showmessage);
 //        exit;
 //    }
+
+public function ajaxUser(Request $request,$page){
+
+
+    $id = Auth::id();
+    $user_name =Auth::user()->name;
+    $param = Auth::user();
+
+
+
+    $users = User::select('users.id', 'users.name', 'users.avatar', 'request.in_id', 'request.to_id', 'status')
+        ->leftjoin('request', function ($join) {
+            $join->on('users.id', '=', 'request.in_id')
+                ->where('request.to_id', '=', Auth::id())
+                ->orOn('users.id', '=', 'request.to_id')
+                ->where('request.in_id', '=', Auth::id());
+        })->paginate(2);
+
+
+
+    return view('home')->with(['users' => $users,
+        'id' => $id,'user_name' => $user_name,'param' => $param])->render();
+
+         }
+
+         public function calendar(){
+
+             $id = Auth::id();
+             $user_name =Auth::user()->name;
+             $param = Auth::user();
+
+
+
+             $users = User::select('users.id', 'users.name', 'users.avatar','users.birthday', 'request.in_id', 'request.to_id', 'status')
+                 ->leftjoin('request', function ($join) {
+                     $join->on('users.id', '=', 'request.in_id')
+                         ->where(['request.to_id'=> Auth::id(),
+                             'request.status'=> '2'
+                         ])
+
+                         ->orOn('users.id', '=', 'request.to_id')
+                         ->where(['request.in_id'=> Auth::id(),
+                             'request.status'=> '2'
+                         ])
+
+                     ;
+                 })->get();
+                return response()->json($users);
+         }
 
 }

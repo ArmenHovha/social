@@ -15,7 +15,7 @@ class LoginController extends Controller
      * @return Response
      */
     public function redirectToProvider($provider)
-    { 
+    {
         return Socialite::driver($provider)->redirect();
     }
 
@@ -25,11 +25,12 @@ class LoginController extends Controller
      * @return Response
      */
     public function handleProviderCallback($provider)
-    { 
+    {
         try 
           {
             $socialUser = Socialite::driver($provider)->user();
-        } 
+
+        }
         catch (\Exception $e) {
             return redirect('/');
         }
@@ -37,9 +38,9 @@ class LoginController extends Controller
         $socialProvider = Social::where('provider_id',$socialUser->getId())->first();
 
         if(!$socialProvider){
-             
+
             $user = User::firstOrCreate(
-                   // ['avatar'=> $socialUser->getAvatar()],
+                    ['avatar'=> $socialUser->getAvatar()],
                     ['name'=> $socialUser->getName()]
                     
                     );

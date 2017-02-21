@@ -60,6 +60,29 @@
                             </div>
                         </div>
 
+
+                        <div class="form-group">
+                            <label for="date" class="col-md-4 control-label">Birthday</label>
+
+                            <div class="col-md-6">
+                                <input id="date" type="date" class="form-control" name="birthday" placeholder="Birthday" required>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
                                 <button type="submit" class="btn btn-primary">
@@ -73,4 +96,7 @@
         </div>
     </div>
 </div>
+
+
+
 @endsection

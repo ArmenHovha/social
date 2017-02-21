@@ -16,7 +16,10 @@
     <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/style.css" />
- 
+    <link href="{{URL::asset('calendar/fullcalendar.min.css')}}" rel='stylesheet' />
+    <link href="{{URL::asset('calendar/fullcalendar.print.min.css')}}" rel='stylesheet' media='print' />
+
+
 
     <!-- Scripts -->
     <script>
@@ -26,7 +29,7 @@
     </script>
 </head>
 <body>
-    <div id="app">
+    <div id="app" class="emptyMe">
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
@@ -61,7 +64,7 @@
                             <li><a href="{{ url('/register') }}">Register</a></li>
                         @else
 
-                           <li><a data-toggle="modal" data-target="#myModal" href=""><img src="/images/group-icon.png"> Friends</a></li>
+                           <li><a data-toggle="modal" data-target="#myModal" href=""><img src="/images/calendar.png">Calendar</a></li>
                             <li class="showmessage"><a href="/messages"><img src="/images/message-icon.png"> Messages <span class="badge pull-right online">  </span></a>  </li>
                             <li><a href="/addnews"><img src="/images/news-icon.png">Add News</a></li>
 
@@ -105,5 +108,10 @@
     <script src="/js/jquery-3.1.0.js"></script>
     <script src="/js/init.js"></script>
     <script src="/js/countmessage.js"></script>
+    <script src="/js/pagination.js"></script>
+    <script src="{{URL::asset('calendar/lib/jquery.min.js')}}"></script>
+    <script src="{{URL::asset('calendar/lib/moment.min.js')}}"></script>
+    <script src="{{URL::asset('calendar/fullcalendar.js')}}"></script>
+    <script src="{{URL::asset('calendar/calendar.js')}}"></script>
 </body>
 </html>

@@ -1,4 +1,6 @@
 $(document).ready(function(){
+
+
     $(".edit").click(function(){
         news_text = $(this).parent().parent().find(".text").text();
         news_title = $(this).parent().parent().find(".h4text").text();
@@ -228,13 +230,7 @@ $(document).ready(function(){
 
                     var html = '<strong class="primary-font">' + value.to_name + '</strong></br>'+
                             '<p>' + value.message + '</p>';
-
-
                         $(".message_" + value.from_id).append(html)
-
-
-
-
 
                 })
 
@@ -262,20 +258,65 @@ $(document).ready(function(){
             dataType: "json",
             data: {to_id: to_id, from_id: from_id, _token: token},
             success: function (data) {
-                $.each(data,function(){
+                $.each(data,function(key,value){
 
 
                     if(this.from_id == from_id){
-                        $(".message")
-                            .append("<div class='chat_time pull-right thime'>"+this.updated_at+ "</div>")
-                            .append( "<strong class='primary-font'>"+user_name+"</strong></br>")
-                            .append("<p>"+this.message+"</p>")
+                         if(this.file != 0 && this.message == ""){
+
+                             $(".message")  .append("<div class='chat_time pull-right thime'>"+this.updated_at+"</div></br>"+
+                                 "<p class='messParagraf'><strong class='primary-font'>"+user_name+"</strong></br>"+
+                                "<a class='pull-right' href='downloadFile/"+this.file+"'>" +
+                                 "<img  class=' img-responsive imgmessage' src='/uploads/file/"+this.file+" ' alt='profile'>" +
+                                 " </a></p>" )
+                        }
+                       else if(this.file == 0){
+                            $(".message")  .append("<div class='chat_time pull-right thime'>"+this.updated_at+"</div></br>"+
+                                "<p><strong class='primary-font'>"+user_name+"</strong></br>"+this.message+"</p>")
+
+                        }
+                         else if(this.file != 0 && this.message != "" ){
+                             $(".message") .append("<div class='chat_time pull-right thime'>"+this.updated_at+"</div></br>"+
+                                 "<p class='messParagraf'><strong class='primary-font'>"+user_name+"</strong></br>"+this.message+
+                                 "<a class='pull-right' href='downloadFile/"+this.file+"'>" +
+                                 "<img  class=' img-responsive imgmessage' src='/uploads/file/"+this.file+" ' alt='profile'>" +
+                                 " </a></p>" )
+                         }
                     }
                     if(this.to_id == from_id) {
-                        $(".message")
-                            .append("<div class='chat_time pull-right thime'>"+this.updated_at+ "</div>")
-                            .append( "<strong class='primary-font'>"+to_name+"</strong></br>")
-                            .append("<p>"+this.message+"</p>")
+                        if(this.file != 0 && this.message == ""){
+
+                            $(".message")  .append("<div class='chat_time pull-right thime'>"+this.updated_at+ "</div></br>" +
+                                "<p class='messParagraf'><strong class='primary-font'>"+to_name+"</strong></br><a class='pull-right' href='downloadFile/"+this.file+"'>" +
+                                "<img  class=' img-responsive imgmessage' src='/uploads/file/"+this.file+" ' alt='profile'>" +
+                                " </a></p></br>" )
+                        }
+                        else if(this.file == 0 ){
+
+                            $(".message")  .append("<div class='chat_time pull-right thime'>"+this.updated_at+ "</div></br>" +
+                               " <p class='messParagraf'><strong class='primary-font'>"+to_name+"</strong></br>"
+                               +this.message+"</p></br>")
+
+                        }
+                        else if(this.file != 0 && this.message != "" ){
+
+                            $(".message")
+                                // .append("<div class='chat_time pull-right thime'>"+this.updated_at+ "</div>" +
+                                // "<strong class='primary-font'>"+to_name+"</strong></br><p>"+this.message+"</br><a class='pull-left' href='downloadFile/"+this.file+"'>" +
+                                // "<img width='50' height='50' class=' img-circle' src='/uploads/file/"+this.file+" ' alt='profile'>" +
+                                // " </a></p>" )
+
+
+                                .append( "<div class='chat_time pull-right thime'>"+this.updated_at+ "</div></br>" +
+                                    "<p class='messParagraf'><strong class='primary-font'>"+to_name+"</strong>" +
+                                    "</br><a class='pull-right' href='downloadFile/"+this.file+"'>" +
+                                    "<img  class=' img-responsive imgmessage' src='/uploads/file/"+this.file+" ' alt='profile'>" +
+                                    " </a></br>"+this.message+"</p></br>" )
+                        }
+
+
+
+
                     }
 
                     //$(butt).removeClass('chatBlock').off('click');
@@ -296,78 +337,70 @@ $(document).ready(function(){
         user_name  = $(this).attr('data-user_name')
         token = $(this).attr('data-content');
         file = document.getElementById('input').files[0];
+
         $(this).parent().parent().find('.text').val(" ")
 
 
-        // $.ajax({
-        //     url:"/postChatMessage",
-        //     type:"post",
-        //
-        //     data:{to_id:to_id,to_name:to_name,message:message,_token:token},
-        //     success:function(data){
-        //         if(data){
-        //
-        //             $('.message')
-        //                 //.append("<div class='chat_time pull-right thime'>"+this.updated_at+ "</div>")
-        //                 .append( "<strong class='primary-font'>"+user_name+"</strong></br>")
-        //                 .append("<p>"+ message+"</p>");
-        //         }
-        //     }
-        // })
+        if(file == null) {
+            $.ajax({
+                url:"/postChatMessage",
+                type:"post",
 
+                data:{to_id:to_id,to_name:to_name,message:message,_token:token},
+                success:function(data){
+                    if(data){
 
+                        $('.message') .append( "<p><strong class='primary-font'>"+user_name+"</strong></br>"+ message+"</p></br>")
 
+                    }
+                }
+            })
 
-        $('.message') .append( "<strong class='primary-font'>"+user_name+"</strong></br>")
-
-        if(file != null && message == " ") {
-            $('.message').append("<p>" + message + "grwegt</p>");
         }
-        else if(file != null && message != ""){
-            $('.message').append("<p>"+ message+"</p>");
-            $('.message').append("<p>" + message + "grwegt</p>");
-        }
-        else{
-            $('.message').append("<p>"+ message+"</p>");
-        }
+             else{
 
-        var formData = new FormData();
-
-         formData.append('user_name',user_name);
-         formData.append('message',message);
-         formData.append('file',file);
-         formData.append('to_name',to_name);
-        formData.append('to_id',to_id);
+            filename =  document.getElementById('input').files[0].name;
 
 
-        var CSRF_TOKEN = $(this).attr('content');
-        $.ajax({
-            url:'/postChatMessage',
-            type:"POST",
-           cache: false,
-             enctype: 'multipart/form-data',
-             data:formData,
-            dataType: "json",
-            processData: false,
-            contentType: false,
-            headers: { 'X-CSRF-TOKEN':  token},
-            success:function(data){
+                    formData = new FormData();
 
-
-                $('.message')
-                //                 //.append("<div class='chat_time pull-right thime'>"+this.updated_at+ "</div>")
-                //
+                    formData.append('user_name',user_name);
+                    formData.append('message',message);
+                    formData.append('to_name',to_name);
+                    formData.append('to_id',to_id);
+                    formData.append('file',file);
 
 
 
+                    var CSRF_TOKEN = $(this).attr('content');
+                    $.ajax({
+                        url:'/postChatMessage',
+                        type:"POST",
+                        cache: false,
+                        enctype: 'multipart/form-data',
+                        data:formData,
+                        //dataType: "json",
+                        processData: false,
+                        contentType: false,
+                        headers: { 'X-CSRF-TOKEN':  token},
+                        success:function(data){
+                            if (this.data){
 
-        //         if(data == 1){
-        //             error.css('display','block')
-        //         }
-        //         console.log(data[0]['news_image']);
-        //         parent.attr('src','/uploads/news/'+data[0]['news_image']);
-            }
-        })
+
+                                    $('.message')
+                                            .append( "<p><strong class='primary-font'>"+user_name+"</strong></br><a class='pull-right' href='downloadFile/"+data+"'>" +
+                                                "<img  class=' img-responsive imgmessage' src='/uploads/file/"+data+" ' alt='profile'>" +
+                                                " </a></br>"+message+"</p></br>" )
+                                }
+
+
+                        }
+
+                    })
+}
+
+        $('#input').val("")
+
 
     })
     function getmessagesChat(id) {
@@ -397,7 +430,7 @@ $(document).ready(function(){
                       //  '<p>' + value.message + '</p>';
 
 
-                    $(".message").append(html)
+                   // $(".message").append(html)
 
 
 
@@ -408,6 +441,32 @@ $(document).ready(function(){
             }
         })
     }
+
+
+
+
+    //
+    //     $(document).on("click",".dow",function () {
+    //         filename = $(this).text();
+    //         token = $("input[name=_token]").val();
+    //
+    //
+    //      $.ajax({
+    //          url:"/downloadFile",
+    //         type:"get",
+    //
+    //         data:{filename:filename,_token:token},
+    //          success:function(data){
+    //             if(data){
+    //
+    //              }
+    //
+    //          }
+    //     })
+    //
+    // })
+
+
 
 
 })

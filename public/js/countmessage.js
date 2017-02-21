@@ -20,9 +20,9 @@ $(document).ready(function(){
         })
     }
 
-         setInterval (function () {
-            countOneMessage()
-         }, 1000);
+    //      setInterval (function () {
+    //    countOneMessage()
+    // }, 1000);
 
         function countOneMessage() {
             token = $("input[name=_token]").val();
@@ -45,5 +45,7 @@ $(document).ready(function(){
 
             })
         }
+
+
 
 })

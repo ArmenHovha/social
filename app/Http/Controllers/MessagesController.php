@@ -9,7 +9,12 @@ use Validator;
 use App\User;
 use App\Req;
 use App\Message;
-
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Contracts\Routing\ResponseFactory;
+use PDF;
+use Mail;
+use App\Mail\KryptoniteFound;
 
 class MessagesController extends Controller
 {
@@ -96,7 +101,7 @@ class MessagesController extends Controller
             'status' => 1,
         ]);
 
-        return response($showmessage);
+        return response()->json($showmessage);
     }
 
     public function countmessage(Request $request){
@@ -132,17 +137,49 @@ class MessagesController extends Controller
     }
     public function postChatMessage(Request $request)
     {
-        dd($request->all());
+
         $from_id = Auth::id();
         $to_id = $request->to_id;
         $message = $request->message;
         $to_name = $request->to_name;
-        Message::insert([
-            'from_id' => $from_id,
-            'to_id' => $to_id,
-            'message' => $message,
-            'to_name' => $to_name,
+        $file = $request->file;
+
+        $data = $request->all();
+
+
+        $validator = Validator::make($data, [
+
+            'file' => 'mimes:jpeg,png,jpg,gif,svg|max:2048'
         ]);
+
+        if(!empty($file)){
+            $destinationPath = public_path('uploads/file');
+
+            $filename = time().'.'.$file->getClientOriginalExtension();
+            Message::insert([
+                'from_id' => $from_id,
+                'to_id' => $to_id,
+                'message' => $message,
+                'to_name' => $to_name,
+                'file'=> $filename,
+
+            ]);
+            $file->move($destinationPath,$filename);
+            return $filename;
+        }
+        else{
+            Message::insert([
+                'from_id' => $from_id,
+                'to_id' => $to_id,
+                'message' => $message,
+                'to_name' => $to_name,
+
+            ]);
+        }
+
+
+
+
 
         $showmessage = Message::where([
             'from_id' => $from_id,
@@ -155,6 +192,48 @@ class MessagesController extends Controller
 
             ])->get();
 
-        return response($showmessage);
+        return response()->json($showmessage);
+    }
+
+    public  function downloadFile(Request $request){
+
+        $filenam = $request->filename;
+        $Path = public_path('uploads/file')."/".$filenam ;
+        return response()->download($Path);
+
+
+    }
+
+    public function pdf(Request $request,$to_id,$to_name){
+        $from_id = Auth::id();
+        $user_name =  Auth::user()->name;
+
+        $getmessage = Message::where([
+            'from_id' => $from_id,
+            'to_id' => $to_id,
+
+        ])
+            ->orwhere([
+                'from_id' => $to_id,
+                'to_id' => $from_id,
+
+            ])->get();
+
+
+        $pdf = PDF::loadView('pdf',['getmessage'=>$getmessage,'from_id'=>$from_id,'user_name'=>$user_name,'to_name'=>$to_name]);
+        $data = $pdf->download('pdfview.pdf');
+
+
+        $result =   Mail::send(['pdf'=>$data],['getmessage'=>$getmessage,'from_id'=>$from_id,'user_name'=>$user_name,'to_name'=>$to_name], function ($message) use ($data)
+        {
+            $message->attachData($data,'chat.pdf' );
+            $message->from('armen89hovhannisyan@gmail.com', 'Armen');
+            $message->to('armen.hovhannisyan89@mail.ru');
+        });
+        if(!$result){
+            return redirect()->back()->with('status','Email is send');
+
+
+        }
     }
 }

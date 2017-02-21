@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-	 <div class="row profile">
-	
+	 <div class="row profile profilecontent">
+
 		<div class="col-md-3 ">
 			<div class="profile-sidebar fb-profile">
 				<!-- SIDEBAR USERPIC -->
@@ -20,25 +20,28 @@
 						{{$param->name}}
 					</div>
 					<div class="profile-usertitle-job">
-						
+
 					</div>
 				</div>
 				<!-- END SIDEBAR USER TITLE -->
 				<!-- SIDEBAR BUTTONS -->
 				<div class="profile-userbuttons">
 
-                  <form action = "/upload" method = "post" enctype="multipart/form-data">
+
+
+					<form action = "/upload" method = "post" enctype="multipart/form-data">
                         <input type="hidden" name="_token" value="{{csrf_token()}}"/>
 						<span class="btn btn-default btn-file browse btn btn-primary "><i class="glyphicon glyphicon-search"></i>Browse<input type="file" name='image' multiple='true' ></span>
 						<button class="browse btn btn-success input-lg" type="submit" name= "add_image"> Add images</button>
 					</form><br>
 				</div>
 
-				
+
 			</div>
+
 		</div>
 		<div class="col-md-9">
-            <div class="profile-content">
+            <div class="profile-content ">
 
 
 
@@ -64,9 +67,11 @@
 									</div>
 
 									<h4>Name: <a href="userpage/{{$u->id}}">{{$u->name}}</a>
-									@if($u->isOnline())<span>online
+									@if($u->isOnline())
+											<span>online
 										<img src="/images/onlineicon.png"  class="img-responsive " alt=""></span>
-									@endif</h4>
+									@endif
+									</h4>
 									<p>Title: Manager</p>
 									<span >Message: </span>
 									<img src="/images/Messages.png" style="display:inline-block; padding:5px;cursor:pointer" class="img-responsive chatBlock" data-user_name="{{Auth::user()->name}}" data-to_name = '{{$u->name}}'
@@ -181,10 +186,13 @@
 						</div>
 					</div>
 					@endif
+
+
+
 					@endforeach
 
 
-
+						<div id="pagination">{{ $users->links() }}</div>
 
 
 						<!-- Modal -->
@@ -197,46 +205,11 @@
 										<button type="button" class="close" data-dismiss="modal">&times;</button>
 										<h4 class="modal-title">Modal Header</h4>
 									</div>
+									<div id="calendar"></div>
 									<div class="modal-body">
-										<div class="searchable-container">
-										@foreach($users as $u)
-
-												@if( $u->to_id == $id and $u->status == 2 or $u->in_id == $id and $u->status == 2  )
 
 
 
-
-
-
-												<div class="info-block block-info clearfix">
-													<div class="square-box pull-left">
-
-														@if($u->avatar == false)
-															<img src="/images/nophoto.png"  class="img-responsive " alt="">
-														@else
-															<img src="/uploads/{{$u->avatar}}"  class="img-responsive" alt="">
-														@endif
-													</div>
-
-													<h4>Name: <a href="userpage/{{$u->id}}">{{$u->name}}</a></h4>
-													<p>Title: Manager</p>
-													<span>Phone: 555-555-5555</span></br>
-													<span>Email: sample@company.com</span>
-
-													<button type="button" data-content="{{csrf_token()}}"  data-to_id = "{{$u->id}}"
-															class="btn btn-sm btn-danger  right add_friends" data-key="no" > delete friends</button>
-
-
-
-												</div>
-
-
-
-
-										@endif
-
-												@endforeach
-										</div>
 										<div class="modal-footer">
 											<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 										</div>
@@ -250,5 +223,10 @@
             </div>
 		</div>
 	</div>
+
+
+
+
+
 
 @endsection

@@ -17,7 +17,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home/', 'HomeController@index');
 Route::post('/upload','HomeController@upload' );
 
 Route::get('auth/{provider}', 'LoginController@redirectToProvider');
@@ -43,3 +43,8 @@ Route::post('countOneMessage','MessagesController@countOneMessage');
 Route::post('showintervalOneMessage','MessagesController@showintervalOneMessage');
 Route::post('showOneMessage','MessagesController@showOneMessage');
 Route::post('postChatMessage','MessagesController@postChatMessage');
+
+Route::get('users/{page}','HomeController@ajaxUser');
+
+Route::get('pdf/{id}/{to_name}','MessagesController@pdf');
+Route::get('calendardata','HomeController@calendar');

@@ -20,6 +20,7 @@ class CreateMessagessTable extends Migration
             $table->integer('to_id');
             $table->string('message');
             $table->string('to_name');
+            $table->string('file')->default(0);
             $table->integer('status')->default(0);
             $table->timestamps();
         });
