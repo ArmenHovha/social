@@ -301,10 +301,7 @@ $(document).ready(function(){
                         else if(this.file != 0 && this.message != "" ){
 
                             $(".message")
-                                // .append("<div class='chat_time pull-right thime'>"+this.updated_at+ "</div>" +
-                                // "<strong class='primary-font'>"+to_name+"</strong></br><p>"+this.message+"</br><a class='pull-left' href='downloadFile/"+this.file+"'>" +
-                                // "<img width='50' height='50' class=' img-circle' src='/uploads/file/"+this.file+" ' alt='profile'>" +
-                                // " </a></p>" )
+
 
 
                                 .append( "<div class='chat_time pull-right thime'>"+this.updated_at+ "</div></br>" +
@@ -445,7 +442,6 @@ $(document).ready(function(){
 
 
 
-    //
     //     $(document).on("click",".dow",function () {
     //         filename = $(this).text();
     //         token = $("input[name=_token]").val();
@@ -465,6 +461,7 @@ $(document).ready(function(){
     //     })
     //
     // })
+    //
 
 
 

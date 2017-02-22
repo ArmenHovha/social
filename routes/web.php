@@ -43,8 +43,10 @@ Route::post('countOneMessage','MessagesController@countOneMessage');
 Route::post('showintervalOneMessage','MessagesController@showintervalOneMessage');
 Route::post('showOneMessage','MessagesController@showOneMessage');
 Route::post('postChatMessage','MessagesController@postChatMessage');
+Route::get('downloadFile/{filename}','MessagesController@downloadFile');
 
 Route::get('users/{page}','HomeController@ajaxUser');
 
 Route::get('pdf/{id}/{to_name}','MessagesController@pdf');
 Route::get('calendardata','HomeController@calendar');
+
