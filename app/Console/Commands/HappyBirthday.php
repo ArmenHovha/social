@@ -47,30 +47,35 @@ class HappyBirthday extends Command
     public function handle()
     {
 
-        $users = User::get();
+//        $users = User::get();
 
-dd(User::Auth()->id);
+        $users = User::select('users.id', 'users.name', 'users.avatar',  'users.birthday','request.in_id', 'request.to_id', 'status')
+            ->leftjoin('request', function ($join) {
+                $join->on('users.id', '=', 'request.in_id')
+                    ->where('request.status','=','2')
+                    ->orOn('users.id', '=', 'request.to_id')
+                    ->where('request.status','=','2');
+            })->get();
 
 
 
 
         foreach ($users as $user) {
-            $day = $user->birthday;
-            $str = substr($day,5);
-            dd(Auth::user()->id);
-    if($str == date('m-d') ){
-dd(Auth::user()->id);
+
+
+
+
         Message::create(
             [
-                'from_id' => Auth::user()->id,
+                'from_id' => $user->in_id,
                 'to_id'=> $user->id,
                 'to_name' => $user->name,
-                'message' => 'Dear'. $user->name . ', I wish you a happy birthday!',
+                'message' => 'Dear ' . $user->name . ', I wish you a happy birthday!',
 
             ]
         );
 
-            }
+
 
 
 
